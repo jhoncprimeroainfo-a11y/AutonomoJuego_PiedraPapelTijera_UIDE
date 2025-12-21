@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador - Jhon Cabezas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* Animaciones de diapositivas */
+        .slide {
+            display: none;
+            height: 100vh;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* Estilos de simulación de Ventana (Fake UI) */
+        .mockup-window {
+            background: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            border: 1px solid #bdc3c7;
+            position: relative;
+        }
+        .mockup-header {
+            background: #2c3e50;
+            padding: 8px 12px;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mockup-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #2c3e50;
+        }
+        .mockup-btn {
+            border: none;
+            padding: 8px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: default;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Botones de navegación */
+        .nav-btn {
+            position: fixed;
+            bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+
+        /* Código simulado */
+        .code-block {
+            font-family: 'Consolas', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+            font-size: 14px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-top: 10px;
+        }
+        .kw { color: #569cd6; } /* Keyword */
+        .str { color: #ce9178; } /* String */
+        .num { color: #b5cea8; } /* Number */
+        .com { color: #6a9955; } /* Comment */
+        .func { color: #dcdcaa; } /* Function */
+
+        /* Gradientes y fondos */
+        .bg-gradient-main {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Estilos de Impresión (PDF) */
+        @media print {
+            .nav-btn, .slide-indicator { display: none !important; }
+            .slide { 
+                position: relative !important; 
+                display: flex !important; 
+                opacity: 1 !important; 
+                page-break-after: always !important; 
+                height: 100vh !important;
+                background-color: #0f172a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { overflow: visible !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. PORTADA -->
+    <div class="slide active bg-gradient-main" id="slide1">
+        <div class="text-center animate-pulse mb-6 text-blue-400 text-6xl">
+            <i class="fa-solid fa-laptop-code"></i>
+        </div>
+        <h1 class="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            El Impacto de las Nuevas Tecnologías
+        </h1>
+        <h2 class="text-2xl text-gray-300 mb-12">Simulador de Decisiones: "Robo-Sheldon v3.0"</h2>
+        
+        <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 shadow-2xl text-left inline-block w-full max-w-2xl">
+            <div class="grid grid-cols-2 gap-4 text-lg">
+                <div class="text-gray-400">Estudiante:</div>
+                <div class="font-bold text-white">Jhon Cabezas</div>
+                
+                <div class="text-gray-400">Materia:</div>
+                <div class="font-bold text-blue-300">Lógica de Programación</div>
+                
+                <div class="text-gray-400">Fecha:</div>
+                <div class="text-white">21 Dic 2025</div>
+                
+                <div class="text-gray-400">Repositorio:</div>
+                <div class="text-green-400 text-sm truncate">github.com/jhoncprimeroainfo-a11y/AutonomoJuego...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. EL PROBLEMA -->
+    <div class="slide bg-gradient-main" id="slide2">
+        <h2 class="text-4xl font-bold mb-12 text-blue-300">1. Planteamiento del Problema</h2>
+        <div class="max-w-4xl text-center">
+            <div class="mb-8 text-8xl text-red-500"><i class="fa-solid fa-user-secret"></i></div>
+            <p class="text-2xl text-gray-300 leading-relaxed mb-8">
+                Vivimos en una sociedad gobernada por algoritmos ocultos ("Cajas Negras"). 
+                Desde las redes sociales hasta los bancos, el software toma decisiones por nosotros, 
+                pero la mayoría de las personas desconoce la lógica detrás de estos procesos.
+            </p>
+            <div class="bg-gray-800 p-4 rounded text-yellow-400 font-bold border border-yellow-600">
+                "La falta de alfabetización digital crea una brecha entre usuarios y creadores."
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. OBJETIVOS -->
+    <div class="slide bg-gradient-main" id="slide3">
+        <h2 class="text-4xl font-bold mb-12 text-blue-300">2. Objetivos del Proyecto</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+            <div class="bg-gray-800 p-6 rounded-lg border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-2">Objetivo General</h3>
+                <p class="text-gray-400">Desarrollar un simulador interactivo que permita visualizar cómo un algoritmo procesa decisiones, utiliza lógica condicional y almacena información de manera persistente.</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg border-l-4 border-purple-500">
+                <h3 class="text-xl font-bold mb-2">Objetivos Específicos</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-2">
+                    <li>Integrar las 4 unidades de la materia.</li>
+                    <li>Aplicar estructuras de datos inmutables y mutables.</li>
+                    <li>Demostrar la persistencia de datos (JSON).</li>
+                    <li>Implementar una interfaz gráfica amigable (UX/UI).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MARCO TEÓRICO (REGLAS) -->
+    <div class="slide bg-gradient-main" id="slide4">
+        <h2 class="text-4xl font-bold mb-8 text-blue-300">3. Marco Teórico: La Lógica Extendida</h2>
+        <div class="flex flex-col items-center">
+            <p class="text-xl text-gray-300 mb-6 text-center max-w-3xl">
+                Basado en la variante de Sam Kass y popularizada por <em>The Big Bang Theory</em>, este modelo reduce la probabilidad de empate del juego clásico (33%) al añadir dos variables nuevas.
+            </p>
+            <div class="bg-white text-black p-6 rounded-lg shadow-xl max-w-2xl text-sm font-mono leading-loose">
+                <div>✂️ Tijera corta a 📄 Papel</div>
+                <div>📄 Papel cubre a 🗿 Piedra</div>
+                <div>🗿 Piedra aplasta a 🦎 Lagarto</div>
+                <div>🦎 Lagarto envenena a 🖖 Spock</div>
+                <div>🖖 Spock rompe a ✂️ Tijera</div>
+                <div>✂️ Tijera decapita a 🦎 Lagarto</div>
+                <div>🦎 Lagarto devora a 📄 Papel</div>
+                <div>📄 Papel desautoriza a 🖖 Spock</div>
+                <div>🖖 Spock vaporiza a 🗿 Piedra</div>
+                <div>🗿 Piedra aplasta a ✂️ Tijera</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. MAPA INTEGRACIÓN -->
+    <div class="slide bg-gradient-main" id="slide5">
+        <h2 class="text-3xl font-bold mb-8 text-white">4. Integración Curricular</h2>
+        <div class="grid grid-cols-2 gap-6 max-w-5xl w-full">
+            <div class="bg-gray-800 p-6 rounded-lg flex items-start space-x-4 hover:bg-gray-700 transition">
+                <div class="bg-blue-900 p-3 rounded-full"><i class="fa-solid fa-cube text-blue-400"></i></div>
+                <div>
+                    <h3 class="font-bold text-blue-300">U1: Tuplas</h3>
+                    <p class="text-sm text-gray-400">Configuración inmutable.</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg flex items-start space-x-4 hover:bg-gray-700 transition">
+                <div class="bg-yellow-900 p-3 rounded-full"><i class="fa-solid fa-list text-yellow-400"></i></div>
+                <div>
+                    <h3 class="font-bold text-yellow-300">U2: Diccionarios</h3>
+                    <p class="text-sm text-gray-400">Mapeo de datos lógica-vista.</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg flex items-start space-x-4 hover:bg-gray-700 transition">
+                <div class="bg-purple-900 p-3 rounded-full"><i class="fa-solid fa-code text-purple-400"></i></div>
+                <div>
+                    <h3 class="font-bold text-purple-300">U3: Funciones</h3>
+                    <p class="text-sm text-gray-400">Modularidad y código limpio.</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg flex items-start space-x-4 hover:bg-gray-700 transition">
+                <div class="bg-green-900 p-3 rounded-full"><i class="fa-solid fa-database text-green-400"></i></div>
+                <div>
+                    <h3 class="font-bold text-green-300">U4: Archivos</h3>
+                    <p class="text-sm text-gray-400">Persistencia con JSON.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. CODIGO U1 -->
+    <div class="slide bg-gradient-main" id="slide6">
+        <h2 class="text-3xl font-bold mb-6 text-blue-300">Unidad 1: Datos Inmutables</h2>
+        <div class="flex gap-8 items-center max-w-6xl w-full">
+            <div class="w-1/2">
+                <h3 class="text-xl font-bold mb-4">¿Por qué usar Tuplas?</h3>
+                <p class="text-gray-300 mb-4">
+                    Las tuplas son secuencias ordenadas e <strong>inmutables</strong>. En el proyecto se utilizan para definir constantes que no deben ser alteradas durante la ejecución del programa, garantizando la estabilidad de la interfaz.
+                </p>
+                <ul class="list-disc list-inside text-gray-400">
+                    <li>Protección contra escritura accidental.</li>
+                    <li>Menor consumo de memoria que las listas.</li>
+                </ul>
+            </div>
+            <div class="w-1/2">
+                <div class="code-block">
+                    <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-2">config.py</div>
+                    <div class="com"># Configuración de Ventana (No modificable)</div>
+                    <div><span class="kw">CONFIG_JUEGO</span> = (<span class="str">"650x750"</span>, <span class="str">"Simulador v3.0"</span>)</div>
+                    <br>
+                    <div class="com"># Paleta de Colores "Geek"</div>
+                    <div><span class="kw">COLORES</span> = (</div>
+                    <div class="pl-4"><span class="str">"#2c3e50"</span>, <span class="com"># Fondo</span></div>
+                    <div class="pl-4"><span class="str">"#ecf0f1"</span>, <span class="com"># Texto</span></div>
+                    <div class="pl-4"><span class="str">"#e74c3c"</span>  <span class="com"># Alerta</span></div>
+                    <div>)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. CODIGO U2 -->
+    <div class="slide bg-gradient-main" id="slide7">
+        <h2 class="text-3xl font-bold mb-6 text-yellow-300">Unidad 2: Estructuras de Datos</h2>
+        <div class="flex gap-8 items-center max-w-6xl w-full">
+            <div class="w-1/2">
+                <div class="code-block">
+                    <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-2">assets.py</div>
+                    <div class="com"># Diccionario: Clave (int) -> Valor (str)</div>
+                    <div><span class="kw">self</span>.mapa_assets = {</div>
+                    <div class="pl-4"><span class="num">1</span>: <span class="str">"Piedra 🗿"</span>,</div>
+                    <div class="pl-4"><span class="num">2</span>: <span class="str">"Papel 📄"</span>,</div>
+                    <div class="pl-4"><span class="num">3</span>: <span class="str">"Tijera ✂️"</span>,</div>
+                    <div class="pl-4"><span class="num">4</span>: <span class="str">"Lagarto 🦎"</span>,</div>
+                    <div class="pl-4"><span class="num">5</span>: <span class="str">"Spock 🖖"</span></div>
+                    <div>}</div>
+                </div>
+            </div>
+            <div class="w-1/2">
+                <h3 class="text-xl font-bold mb-4">Diccionarios (Hash Maps)</h3>
+                <p class="text-gray-300 mb-4">
+                    Utilizamos diccionarios para mapear la lógica interna (números del 1 al 5) con la representación visual para el usuario.
+                </p>
+                <p class="text-gray-300">
+                    Esto permite que el código lógico trabaje con enteros (más rápido) mientras la interfaz muestra texto y emojis amigables.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. CODIGO U3 -->
+    <div class="slide bg-gradient-main" id="slide8">
+        <h2 class="text-3xl font-bold mb-6 text-purple-300">Unidad 3: Modularidad (Funciones)</h2>
+        <div class="flex flex-col items-center max-w-5xl w-full">
+            <p class="text-gray-300 mb-6 text-center">
+                El código no es un script lineal, sino una clase organizada en métodos con responsabilidades únicas (Principio de Responsabilidad Única).
+            </p>
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <div class="bg-gray-800 p-4 rounded border border-purple-500/30">
+                    <h4 class="font-bold text-purple-400 mb-2">Lógica Pura</h4>
+                    <code class="text-xs text-gray-300">def logica_victoria(u, pc): ...</code>
+                    <p class="text-xs text-gray-500 mt-2">Calcula ganador sin tocar la interfaz.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded border border-purple-500/30">
+                    <h4 class="font-bold text-purple-400 mb-2">Gestión de Datos</h4>
+                    <code class="text-xs text-gray-300">def guardar_datos(self): ...</code>
+                    <p class="text-xs text-gray-500 mt-2">Maneja I/O de archivos.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded border border-purple-500/30">
+                    <h4 class="font-bold text-purple-400 mb-2">Interfaz Gráfica</h4>
+                    <code class="text-xs text-gray-300">def mostrar_menu(self): ...</code>
+                    <p class="text-xs text-gray-500 mt-2">Dibuja botones y etiquetas.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded border border-purple-500/30">
+                    <h4 class="font-bold text-purple-400 mb-2">Controlador</h4>
+                    <code class="text-xs text-gray-300">def procesar_jugada(u): ...</code>
+                    <p class="text-xs text-gray-500 mt-2">Conecta el click del usuario con la lógica.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. CODIGO U4 -->
+    <div class="slide bg-gradient-main" id="slide9">
+        <h2 class="text-3xl font-bold mb-6 text-green-300">Unidad 4: Persistencia y Archivos</h2>
+        <div class="flex gap-8 items-center max-w-6xl w-full">
+            <div class="w-1/2">
+                <div class="code-block">
+                    <div class="text-xs text-gray-500 mb-2 border-b border-gray-700 pb-2">persistencia.py</div>
+                    <div><span class="kw">import</span> json</div>
+                    <br>
+                    <div><span class="func">def</span> cargar_datos(<span class="kw">self</span>):</div>
+                    <div class="pl-4"><span class="kw">try</span>:</div>
+                    <div class="pl-8"><span class="kw">with</span> open(<span class="str">"historial.json"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:</div>
+                    <div class="pl-12"><span class="kw">return</span> json.load(f)</div>
+                    <div class="pl-4"><span class="kw">except</span>:</div>
+                    <div class="pl-8"><span class="kw">return</span> {<span class="str">"victorias"</span>: <span class="num">0</span>, <span class="str">"partidas"</span>: <span class="num">0</span>}</div>
+                </div>
+            </div>
+            <div class="w-1/2">
+                <h3 class="text-xl font-bold mb-4">Manejo de Excepciones</h3>
+                <p class="text-gray-300 mb-4">
+                    El sistema es robusto: utiliza bloques <code>try-except</code> para evitar que el programa colapse si el archivo de datos no existe o está corrupto.
+                </p>
+                <p class="text-gray-300">
+                    Si ocurre un error, el sistema se "autocorrige" generando un estado inicial en cero.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. DIAGRAMA LÓGICA -->
+    <div class="slide bg-gradient-main" id="slide10">
+        <h2 class="text-3xl font-bold mb-8 text-blue-300">Lógica Algorítmica</h2>
+        <div class="relative w-full max-w-4xl h-96 flex items-center justify-center">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-80 h-80 rounded-full border-2 border-dashed border-gray-600 animate-spin-slow" style="animation-duration: 20s;"></div>
+            </div>
+            <div class="absolute top-0 text-yellow-400 text-4xl bg-gray-900 p-2"><i class="fa-regular fa-hand-rock"></i></div>
+            <div class="absolute bottom-0 text-green-400 text-4xl bg-gray-900 p-2"><i class="fa-regular fa-hand-lizard"></i></div>
+            <div class="absolute left-10 top-20 text-blue-400 text-4xl bg-gray-900 p-2"><i class="fa-regular fa-hand-paper"></i></div>
+            <div class="absolute right-10 top-20 text-red-400 text-4xl bg-gray-900 p-2"><i class="fa-regular fa-hand-scissors"></i></div>
+            <div class="absolute bottom-10 right-20 text-purple-400 text-4xl bg-gray-900 p-2"><i class="fa-regular fa-hand-spock"></i></div>
+
+            <div class="bg-gray-800 p-6 rounded-xl border border-gray-600 z-10 max-w-md text-center">
+                <h3 class="text-xl font-bold text-white mb-2">Red Lógica</h3>
+                <p class="text-sm text-gray-300">
+                    Cada nodo (arma) tiene exactamente 2 victorias y 2 derrotas, manteniendo el equilibrio matemático perfecto.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. UI MENU -->
+    <div class="slide bg-gradient-main" id="slide11">
+        <h2 class="text-3xl font-bold mb-8 text-white">Interfaz: Menú Principal</h2>
+        <div class="mockup-window w-80 h-96 bg-white transform hover:scale-105 transition duration-300">
+            <div class="mockup-header">
+                <span>Simulador: Humano vs Robo-Sheldon</span>
+                <div class="flex gap-1"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div></div>
+            </div>
+            <div class="mockup-body">
+                <div class="text-2xl font-bold text-yellow-600 mb-2">⚡ BAZINGA! ⚡</div>
+                <div class="text-sm font-bold text-gray-800 mb-6">VS. ROBO-SHELDON v3.0</div>
+                <div class="bg-gray-700 text-gray-300 text-xs p-2 rounded mb-6 w-full text-center">Simulaciones Totales: 104</div>
+                <button class="mockup-btn bg-blue-500 w-full">🤖 INICIAR DESAFÍO</button>
+                <button class="mockup-btn bg-purple-500 w-full">💾 MEMORIA DEL SISTEMA</button>
+                <button class="mockup-btn bg-red-500 w-full">❌ CERRAR SISTEMA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. UI CONFIGURACIÓN (NUEVO) -->
+    <div class="slide bg-gradient-main" id="slide12">
+        <h2 class="text-3xl font-bold mb-8 text-white">Interfaz: Configuración de Partida</h2>
+        <div class="flex gap-8 items-center">
+            <div class="mockup-window w-80 h-96 bg-white">
+                <div class="mockup-header">
+                    <span>Configuración</span>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="mockup-body items-start pl-8 pr-8">
+                    <div class="text-lg font-bold text-gray-700 mb-4 mt-2">⚙️ PARÁMETROS</div>
+                    
+                    <div class="text-sm font-bold text-blue-600 mb-2">Complejidad:</div>
+                    <div class="flex items-center mb-2 text-gray-600 text-sm">
+                        <div class="w-4 h-4 rounded-full border border-gray-400 mr-2"></div> Clásico (3)
+                    </div>
+                    <div class="flex items-center mb-6 text-gray-800 text-sm font-bold">
+                        <div class="w-4 h-4 rounded-full border-4 border-blue-500 mr-2"></div> Big Bang (5)
+                    </div>
+
+                    <div class="text-sm font-bold text-blue-600 mb-2">Modo de Ejecución:</div>
+                    <div class="flex items-center mb-2 text-gray-600 text-sm">
+                        <div class="w-4 h-4 rounded-full border border-gray-400 mr-2"></div> Muerte Súbita
+                    </div>
+                    <div class="flex items-center mb-8 text-gray-800 text-sm font-bold">
+                        <div class="w-4 h-4 rounded-full border-4 border-blue-500 mr-2"></div> Torneo (Mejor de 3)
+                    </div>
+
+                    <button class="mockup-btn bg-green-500 w-full">⚡ EJECUTAR ⚡</button>
+                </div>
+            </div>
+            <div class="max-w-md">
+                <h3 class="text-xl font-bold text-blue-300 mb-2">Widgets de Tkinter</h3>
+                <p class="text-gray-300">
+                    Se utilizan <code>Radiobutton</code> para permitir selección exclusiva de opciones. El estado se guarda en variables de control <code>tk.IntVar</code> que determinan la lógica de la siguiente pantalla.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 13. UI JUEGO -->
+    <div class="slide bg-gradient-main" id="slide13">
+        <h2 class="text-3xl font-bold mb-8 text-white">Interfaz: Ejecución (Gameplay)</h2>
+        <div class="mockup-window w-96 h-auto bg-white">
+            <div class="mockup-header"><span>Partida...</span><div class="w-3 h-3 rounded-full bg-red-500"></div></div>
+            <div class="mockup-body">
+                <div class="text-lg font-bold text-gray-800 mb-4">🔥 PROTOCOLO EXTENDIDO</div>
+                <div class="bg-gray-800 text-white p-3 rounded w-full text-center mb-4">
+                    <div class="text-2xl font-bold">2 - 1</div>
+                    <div class="text-xs text-gray-400">Humano vs Robo-Sheldon</div>
+                </div>
+                <div class="text-center mb-4 p-2 bg-green-100 border border-green-300 rounded text-green-800 text-xs w-full">
+                    <strong>Humano: Spock 🖖 vs Robot: Piedra 🗿</strong><br>🎉 ¡Error en mi sistema! PUNTO PARA TI
+                </div>
+                <div class="flex justify-center gap-2 mb-2">
+                    <button class="mockup-btn bg-gray-200 text-gray-800">🗿</button>
+                    <button class="mockup-btn bg-gray-200 text-gray-800">📄</button>
+                    <button class="mockup-btn bg-gray-200 text-gray-800">✂️</button>
+                </div>
+                <div class="flex justify-center gap-2">
+                    <button class="mockup-btn bg-gray-200 text-gray-800">🦎</button>
+                    <button class="mockup-btn bg-gray-200 text-gray-800">🖖</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 14. UI ESTADÍSTICAS (NUEVO) -->
+    <div class="slide bg-gradient-main" id="slide14">
+        <h2 class="text-3xl font-bold mb-8 text-white">Interfaz: Reporte de Estadísticas</h2>
+        <div class="flex gap-8 items-center flex-row-reverse">
+            <div class="mockup-window w-80 h-96 bg-white">
+                <div class="mockup-header"><span>Estadísticas</span><div class="w-3 h-3 rounded-full bg-purple-500"></div></div>
+                <div class="mockup-body">
+                    <div class="text-lg font-bold text-gray-800 mb-6">📊 RENDIMIENTO</div>
+                    
+                    <div class="bg-gray-800 text-green-400 font-mono p-4 rounded w-full text-sm mb-6">
+                        Eventos: 104<br><br>
+                        🧠 Humano: 45<br>
+                        🤖 Algoritmo: 59
+                    </div>
+                    
+                    <button class="mockup-btn bg-gray-500 w-full">⏪ Volver al Menú</button>
+                </div>
+            </div>
+            <div class="max-w-md text-right">
+                <h3 class="text-xl font-bold text-purple-300 mb-2">Lectura de Datos</h3>
+                <p class="text-gray-300">
+                    Esta pantalla no calcula nada; simplemente <strong>visualiza</strong> lo que está almacenado en el archivo JSON. Es la demostración visual de la persistencia de datos.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 15. PERSISTENCIA JSON -->
+    <div class="slide bg-gradient-main" id="slide15">
+        <h2 class="text-3xl font-bold mb-8 text-blue-300">Persistencia de Datos (JSON)</h2>
+        <div class="bg-gray-900 p-6 rounded-lg font-mono text-sm border border-gray-700 shadow-inner text-xl">
+            <div class="text-gray-500 mb-2">// historial_robo_sheldon.json</div>
+            <div class="text-yellow-500">{</div>
+            <div class="pl-8 text-blue-400">"victorias_robo": <span class="text-green-400">59</span>,</div>
+            <div class="pl-8 text-blue-400">"victorias_humano": <span class="text-green-400">45</span>,</div>
+            <div class="pl-8 text-blue-400">"partidas": <span class="text-green-400">104</span></div>
+            <div class="text-yellow-500">}</div>
+        </div>
+        <p class="mt-8 text-gray-400 text-center max-w-2xl">
+            Este archivo se actualiza automáticamente al finalizar cada partida, asegurando que el progreso del usuario nunca se pierda.
+        </p>
+    </div>
+
+    <!-- 16. LIMITACIONES Y FUTURO -->
+    <div class="slide bg-gradient-main" id="slide16">
+        <h2 class="text-4xl font-bold mb-12 text-white">Análisis Crítico</h2>
+        <div class="grid grid-cols-2 gap-10 max-w-6xl">
+            <div class="bg-gray-800 p-8 rounded-lg border-t-4 border-red-500">
+                <h3 class="text-2xl font-bold text-red-400 mb-4">Limitaciones Actuales</h3>
+                <ul class="list-disc list-inside text-gray-300 space-y-3">
+                    <li>La IA es puramente aleatoria (<code>random.randint</code>).</li>
+                    <li>Interfaz local (Solo funciona en el PC del usuario).</li>
+                    <li>No hay modo multijugador en red.</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-lg border-t-4 border-green-500">
+                <h3 class="text-2xl font-bold text-green-400 mb-4">Proyección Futura (v4.0)</h3>
+                <ul class="list-disc list-inside text-gray-300 space-y-3">
+                    <li><strong>Machine Learning:</strong> Usar Cadenas de Markov para predecir la siguiente jugada del humano.</li>
+                    <li><strong>Base de Datos:</strong> Migrar de JSON a SQLite para mayor robustez.</li>
+                    <li><strong>Web:</strong> Portar la lógica a Django/Flask.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 17. CIERRE -->
+    <div class="slide bg-gradient-main" id="slide17">
+        <div class="text-center max-w-3xl">
+            <div class="mb-8 text-6xl text-purple-500">
+                <i class="fa-solid fa-rocket animate-bounce"></i>
+            </div>
+            <h2 class="text-4xl font-bold mb-6 text-white">Conclusión Final</h2>
+            <p class="text-xl text-gray-300 mb-10 leading-relaxed">
+                "La programación no es solo escribir código; es modelar la realidad, gestionar datos y crear experiencias de usuario coherentes. Este proyecto es el primer paso hacia sistemas inteligentes."
+            </p>
+            
+            <div class="flex flex-col items-center gap-4">
+                <a href="https://github.com/jhoncprimeroainfo-a11y/AutonomoJuego_PiedraPapelTijera_UIDE.git" target="_blank" 
+                   class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full border border-gray-600 transition duration-300 flex items-center gap-2">
+                    <i class="fa-brands fa-github text-xl"></i> Ver Código Fuente
+                </a>
+                <div class="text-sm text-gray-500 mt-4">
+                    Herramientas: Python 3.10 • Tkinter • VS Code • Git
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN -->
+    <button class="nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+    <button class="nav-btn next-btn" onclick="changeSlide(1)">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+    <div class="fixed bottom-5 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm slide-indicator">
+        <span id="slide-number">1</span> / 17
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 17;
+
+        function updateSlide() {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            const slide = document.getElementById('slide' + currentSlide);
+            slide.classList.add('active');
+            
+            // Actualizar número
+            document.getElementById('slide-number').innerText = currentSlide;
+            
+            // Control de botones
+            document.querySelector('.prev-btn').style.opacity = currentSlide === 1 ? '0.5' : '1';
+            document.querySelector('.next-btn').style.opacity = currentSlide === totalSlides ? '0.5' : '1';
+        }
+
+        function changeSlide(direction) {
+            const next = currentSlide + direction;
+            if (next >= 1 && next <= totalSlides) {
+                currentSlide = next;
+                updateSlide();
+            }
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
